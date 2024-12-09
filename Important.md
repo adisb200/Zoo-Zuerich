@@ -6,3 +6,4 @@
   - in page folder -> page.jsx
   - < Link href={'pages/page123'}> 
 - backend is possible if we want it directly in next.js
+- run project mit `npm run dev` in console
