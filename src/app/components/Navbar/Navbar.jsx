@@ -3,13 +3,14 @@
 import {useState} from "react";
 import Link from "next/link";
 import styles from "./Navbar.module.css";
+import MenuIcon from '@mui/icons-material/Menu';
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
 
     return (
         <div className={styles.flex}>
-            <img src={'../../../../assets/icons/menu.png'} alt="menu" onClick={() => setOpen(!open)} />
+            <MenuIcon onClick={() => setOpen(!open)}/>
 
             {open && <div>
                 <Link className={styles.link} href={"/"}>Tickets anzeigen</Link>
