@@ -1,8 +1,14 @@
 .flex{
     display: flex;
+    flex-direction: column;
 }
 
 .link{
-    justify-content: space-around;
     text-decoration: none;
+    padding: 0.25rem;
+    color: black;
+}
+
+.link:hover{
+    text-decoration: underline;
 }
