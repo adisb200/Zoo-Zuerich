@@ -1,0 +1,19 @@
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row{
+    display: flex;
+    justify-content: space-between;
+}
+
+.link{
+    text-decoration: none;
+    padding: 0.25rem;
+    color: black;
+}
+
+.link:hover{
+    text-decoration: underline;
+}
