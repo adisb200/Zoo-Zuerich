@@ -12,13 +12,13 @@ export default function Navbar() {
 
     return (
         <>
-            <div>
+            <div style={{display:"flex", justifyContent:"space-between"}}>
                 <MenuIcon onClick={() => setOpen(!open)}/>
                 <Image height={20} src={logoSvg} alt={'logo'}/>
             </div>
 
 
-            {open && <div className={'styles.flex'}>
+            {open && <div className={styles.flexColumn}>
                 <Link className={styles.link} href={"/"}>Tickets anzeigen</Link>
                 <Link className={styles.link} href={"/"}>Karten & Route</Link>
                 <Link className={styles.link} href={"/"}>Tickets kaufen</Link>

@@ -1,6 +1,11 @@
-.flex{
+.flex-column{
     display: flex;
     flex-direction: column;
+}
+
+.flex-row{
+    display: flex;
+    justify-content: space-between;
 }
 
 .link{
