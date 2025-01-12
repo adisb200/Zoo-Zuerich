@@ -3,17 +3,18 @@
 import {useState} from "react";
 import styles from "./page.module.css"
 import "./styles.css"
+import Link from "next/link";
+
 
 export default function Page() {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         personCount: "",
-        name: "",
+        people: [{name: "", ticketType: "free"}],
         date: "",
-        ticketType: "Standard",
         special: "none",
         paymentMethod: "Twint",
-        ovTicket: false,
+        ovTicket: {selected: false, place: ""},
     });
 
     const handleChange = (e) => {
@@ -22,20 +23,42 @@ export default function Page() {
             ...formData,
             [name]: type === "checkbox" ? checked : value,
         });
+        console.log(formData);
     };
 
     const resetForm = () => {
         setFormData({
             personCount: "",
+            people: [{name: "", ticketType: "free"}],
             name: "",
             date: "",
-            ticketType: "Standard",
             special: "none",
             paymentMethod: "Twint",
-            ovTicket: false,
+            ovTicket: {selected: false, place: ""},
         });
         setStep(1);
     };
+
+    function calculateFinalPrice() {
+        const kidPrice = 6;
+        const adultPrice = 12;
+        const ovTicketPrice = 6;
+        let totalPrice = 0;
+
+        formData.people.forEach(person => {
+            if (person.ticketType === "kid") {
+                totalPrice += kidPrice;
+            } else if (person.ticketType === "adult") {
+                totalPrice += adultPrice;
+            }
+        });
+
+        if (formData.ovTicket.selected) {
+            totalPrice += formData.people.length * ovTicketPrice;
+        }
+
+        return totalPrice;
+    }
 
     return (
         <div className={styles.container}>
@@ -52,15 +75,54 @@ export default function Page() {
                         onChange={handleChange}
                         placeholder="Anzahl Personen"
                     />
-                    <label htmlFor="name">Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Vorname Nachname"
-                    />
+                    <label htmlFor="name">Personen Erfassen</label>
+                    {formData.people.map((person, index) => (
+                        <div key={index} className={styles.flexdiv}>
+                            <input
+                                type="text"
+                                name="name"
+                                value={person.name}
+                                onChange={(e) => {
+                                    const newPeople = [...formData.people];
+                                    newPeople[index].name = e.target.value;
+                                    setFormData({...formData, people: newPeople});
+                                }}
+                                placeholder="Vorname Nachname"
+                            />
+                            <select
+                                name="age"
+                                id="ticketType"
+                                value={person.ticketType}
+                                onChange={(e) => {
+                                    const newPeople = [...formData.people];
+                                    newPeople[index].ticketType = e.target.value;
+                                    setFormData({...formData, people: newPeople});
+                                }}>
+                                <option value="free">0-6</option>
+                                <option value="kid">6-17</option>
+                                <option value="adult">18+</option>
+                            </select>
+                        </div>
+                    ))}
+                    <div className={styles.flexdiv}>
+                        <button
+                            onClick={() =>
+                                setFormData({
+                                    ...formData,
+                                    people: [...formData.people, {name: "", ticketType: "free"}],
+                                })
+                            } className={styles.buttonBlue}>+
+                        </button>
+                        <button
+                            onClick={() =>
+                                setFormData({
+                                    ...formData,
+                                    people: [...formData.people.slice(0, -1)],
+                                })
+                            } className={styles.buttonRed}>-
+                        </button>
+                    </div>
+
 
                     <label htmlFor="date">Datum</label>
                     <input
@@ -78,25 +140,22 @@ export default function Page() {
             {step === 2 && (
                 <div className={styles.content}>
                     <h3>Tickets</h3>
-                    <label>
-                        <input
-                            type="radio"
-                            name="ticketType"
-                            value="Standard"
-                            checked={formData.ticketType === "Standard"}
-                            onChange={handleChange}
-                        />
-                        Erwachsene (18+ Jahre) - 12 CHF
+                    <label className={styles.ticketLabel}>
+                        <span
+                            className={styles.ticketCount}>{formData.people.filter(person => person.ticketType === "free").length}</span> Jünger
+                        als 6 (Kostenlos)
                     </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="ticketType"
-                            value="Child"
-                            checked={formData.ticketType === "Child"}
-                            onChange={handleChange}
-                        />
-                        Kinder (0-17 Jahre) - 8 CHF
+
+                    <label className={styles.ticketLabel}>
+                        <span
+                            className={styles.ticketCount}>{formData.people.filter(person => person.ticketType === "kid").length}</span> 6
+                        -17 Jahre (6 CHF.-)
+                    </label>
+
+                    <label className={styles.ticketLabel}>
+                        <span
+                            className={styles.ticketCount}>{formData.people.filter(person => person.ticketType === "adult").length}</span> 18+
+                        Jahre (12 CHF.-)
                     </label>
 
                     <label htmlFor="special">Spezial Tickets</label>
@@ -109,7 +168,12 @@ export default function Page() {
                         <option value="none">Keine</option>
                         <option value="group">Gruppenticket (10 Personen)</option>
                         <option value="family">Familienticket</option>
+                        <option value={"company"}>Firmenausflug</option>
                     </select>
+
+                    <button className={`${styles.buttonGreen} ${styles.center}`}><Link
+                        href={"https://www.zoo.ch/de"}></Link>Kontakt
+                    </button>
 
                     <button onClick={() => setStep(3)}>Weiter</button>
                 </div>
@@ -118,6 +182,7 @@ export default function Page() {
             {step === 3 && (
                 <div className={styles.content}>
                     <h3>Zahlungsart auswählen</h3>
+                    <h4>Bezahlungsmöglichkeiten</h4>
                     <label>
                         <input
                             type="radio"
@@ -149,17 +214,24 @@ export default function Page() {
                         PayPal
                     </label>
 
-                    <h4>Zusatzoptionen</h4>
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="ovTicket"
-                            checked={formData.ovTicket}
-                            onChange={handleChange}
-                        />
-                        ÖV Tages Ticket (6 CHF)
-                    </label>
+                    <br/>
 
+                    <h3>ÖV Tages Ticket</h3>
+                    <div style={{display: "flex", alignItems: "center"}}>
+                        <input type="checkbox" name="ovTicket" checked={formData.ovTicket.selected}
+                               onChange={handleChange}/>
+                        Von:
+                        <label>
+                            <input type="text" name="ovTicket.place" value={formData.ovTicket.place}
+                                   onChange={(e) => setFormData({
+                                       ...formData,
+                                       ovTicket: {...formData.ovTicket, place: e.target.value}
+                                   })} placeholder="Ort"/>
+                        </label>
+                        6 CHF.- pro Person
+                    </div>
+
+                    <h3>Total Price: {calculateFinalPrice()} CHF</h3>
                     <button onClick={() => setStep(4)}>Bestätigen</button>
                 </div>
             )}
