@@ -23,9 +23,54 @@ export default function Page() {
             ...formData,
             [name]: type === "checkbox" ? checked : value,
         });
-        console.log(formData);
     };
 
+        setFinalPrice(calculateFinalPrice())
+    };
+    const handlePeopleCountChange = (e) => {
+        const newCount = parseInt(e.target.value, 10);
+        const newPeople = [...formData.people];
+
+        if (newCount > formData.peopleCount) {
+            for (let i = formData.peopleCount; i < newCount; i++) {
+                newPeople.push({name: "", ticketType: "free"});
+            }
+        } else {
+            newPeople.length = newCount;
+        }
+
+        setFormData({
+            ...formData,
+            peopleCount: newCount,
+            people: newPeople,
+        });
+    };
+
+    const handlePersonChange = (index, field, value) => {
+        const newPeople = [...formData.people];
+        newPeople[index][field] = value;
+        setFormData({
+            ...formData,
+            people: newPeople,
+        });
+    };
+
+    const addPerson = () => {
+        setFormData({
+            ...formData,
+            peopleCount: formData.peopleCount + 1,
+            people: [...formData.people, {name: "", ticketType: "free"}],
+        });
+    };
+
+    const removePerson = () => {
+        if (formData.peopleCount > 1) {
+            setFormData({
+                ...formData,
+                peopleCount: formData.peopleCount - 1,
+                people: formData.people.slice(0, -1),
+            });
+        }
     const resetForm = () => {
         setFormData({
             personCount: "",
@@ -60,7 +105,7 @@ export default function Page() {
         return totalPrice;
     }
 
-    return (
+        return (
         <div className={styles.container}>
             <header>Ticket Kauf</header>
             {step === 1 && (
@@ -69,10 +114,10 @@ export default function Page() {
                     <label htmlFor="personCount">Anzahl Leute</label>
                     <input
                         type="number"
-                        name="personCount"
-                        id="personCount"
-                        value={formData.personCount}
-                        onChange={handleChange}
+                        name="peopleCount"
+                        id="peopleCount"
+                        value={formData.peopleCount}
+                        onChange={handlePeopleCountChange}
                         placeholder="Anzahl Personen"
                     />
                     <label htmlFor="name">Personen Erfassen</label>
@@ -82,22 +127,14 @@ export default function Page() {
                                 type="text"
                                 name="name"
                                 value={person.name}
-                                onChange={(e) => {
-                                    const newPeople = [...formData.people];
-                                    newPeople[index].name = e.target.value;
-                                    setFormData({...formData, people: newPeople});
-                                }}
+                                onChange={(e) => handlePersonChange(index, "name", e.target.value)}
                                 placeholder="Vorname Nachname"
                             />
                             <select
-                                name="age"
-                                id="ticketType"
+                                name="ticketType"
                                 value={person.ticketType}
-                                onChange={(e) => {
-                                    const newPeople = [...formData.people];
-                                    newPeople[index].ticketType = e.target.value;
-                                    setFormData({...formData, people: newPeople});
-                                }}>
+                                onChange={(e) => handlePersonChange(index, "ticketType", e.target.value)}
+                            >
                                 <option value="free">0-6</option>
                                 <option value="kid">6-17</option>
                                 <option value="adult">18+</option>
@@ -105,22 +142,8 @@ export default function Page() {
                         </div>
                     ))}
                     <div className={styles.flexdiv}>
-                        <button
-                            onClick={() =>
-                                setFormData({
-                                    ...formData,
-                                    people: [...formData.people, {name: "", ticketType: "free"}],
-                                })
-                            } className={styles.buttonBlue}>+
-                        </button>
-                        <button
-                            onClick={() =>
-                                setFormData({
-                                    ...formData,
-                                    people: [...formData.people.slice(0, -1)],
-                                })
-                            } className={styles.buttonRed}>-
-                        </button>
+                        <button onClick={addPerson} className={styles.buttonBlue}>+</button>
+                        <button onClick={removePerson} className={styles.buttonRed}>-</button>
                     </div>
 
 
@@ -231,7 +254,7 @@ export default function Page() {
                         6 CHF.- pro Person
                     </div>
 
-                    <h3>Total Price: {calculateFinalPrice()} CHF</h3>
+                    <h3>Total Price: {finalPrice} CHF</h3>
                     <button onClick={() => setStep(4)}>Bestätigen</button>
                 </div>
             )}
@@ -240,7 +263,8 @@ export default function Page() {
                 <div className={styles.content}>
                     <h3>Bestätigung</h3>
                     <p>Wollen Sie den Kauf bestätigen?</p>
-                    <button onClick={() => setStep(5)}>Bestätigen</button>
+                    <button onClick={() => setStep(3)} className={styles.buttonRed}>Abbrechen</button>
+                    <button onClick={() => setStep(5)} className={styles.buttonGreen}>Bestätigen</button>
                 </div>
             )}
 
