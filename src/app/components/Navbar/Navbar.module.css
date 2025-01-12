@@ -1,19 +1,24 @@
-.flex-column{
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-row{
-    display: flex;
-    justify-content: space-between;
-}
-
-.link{
+.link {
     text-decoration: none;
     padding: 0.25rem;
     color: black;
 }
 
-.link:hover{
+.link:hover {
     text-decoration: underline;
+}
+
+.background {
+    background-color: #f8f9fa;
+    height: 3.2rem;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.navbar {
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
 }
