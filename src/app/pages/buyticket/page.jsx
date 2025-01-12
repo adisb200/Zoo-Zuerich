@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import styles from "./page.module.css"
 import "./styles.css"
 import Link from "next/link";
@@ -16,6 +16,9 @@ export default function Page() {
         paymentMethod: "Twint",
         ovTicket: {selected: false, place: ""},
     });
+    useEffect(() => {
+        calculateFinalPrice()
+    }, [formData]);
 
     const handleChange = (e) => {
         const {name, value, type, checked} = e.target;
@@ -25,8 +28,6 @@ export default function Page() {
         });
     };
 
-        setFinalPrice(calculateFinalPrice())
-    };
     const handlePeopleCountChange = (e) => {
         const newCount = parseInt(e.target.value, 10);
         const newPeople = [...formData.people];
@@ -71,6 +72,8 @@ export default function Page() {
                 people: formData.people.slice(0, -1),
             });
         }
+    };
+
     const resetForm = () => {
         setFormData({
             personCount: "",
@@ -82,6 +85,7 @@ export default function Page() {
             ovTicket: {selected: false, place: ""},
         });
         setStep(1);
+        calculateFinalPrice();
     };
 
     function calculateFinalPrice() {
@@ -105,7 +109,7 @@ export default function Page() {
         return totalPrice;
     }
 
-        return (
+    return (
         <div className={styles.container}>
             <header>Ticket Kauf</header>
             {step === 1 && (
@@ -254,7 +258,7 @@ export default function Page() {
                         6 CHF.- pro Person
                     </div>
 
-                    <h3>Total Price: {finalPrice} CHF</h3>
+                    <h3>Total Price: {calculateFinalPrice()} CHF</h3>
                     <button onClick={() => setStep(4)}>Bestätigen</button>
                 </div>
             )}
@@ -275,5 +279,6 @@ export default function Page() {
                 </div>
             )}
         </div>
-    )
+    );
 }
+;
