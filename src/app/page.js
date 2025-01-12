@@ -20,11 +20,13 @@ function App() {
                     <div className="sidebar">
                         <div className="menu-section">
                             <span className="icon">📆</span>
-                            <div className="menu-title">Zoo Besuch Planen</div>
+                            <div className="menu-title">
+                                <Link href={"/pages/showticket"}></Link>
+                                Zoo Besuch Planen</div>
                         </div>
                         <div className="menu-section">
                             <span className="icon">🗺️</span>
-                            <div className="menu-title">Karte & Route</div>
+                            <div className="menu-title"><Link href={"/pages/map"}>Karte & Route</Link></div>
                         </div>
                         <div className="menu-section">
                             <span className="icon">🎟️</span>
