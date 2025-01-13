@@ -1,0 +1,85 @@
+.container {
+    max-width: 400px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+
+.content {
+    padding: 20px;
+}
+
+.buttonBlue {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+}
+
+.buttonBlue:hover {
+    background-color: #0056b3;
+}
+
+.buttonRed {
+    width: 100%;
+    padding: 10px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+}
+
+.buttonRed:hover {
+    background-color: #a71d2a;
+}
+
+.buttonGreen {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+}
+
+.buttonGreen:hover {
+    background-color: #218838;
+}
+
+.flexdiv {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.ticketLabel {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.ticketCount {
+    font-size: 1.2em;
+    color: #007bff;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
