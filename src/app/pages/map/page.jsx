@@ -57,14 +57,14 @@ const SavedRoutes = ({ savedRoutes, handleRemoveRoute }) => (
         ) : (
             <ul style={{ listStyleType: "none", padding: 0 }}>
                 {savedRoutes.map((route, index) => (
-                    <li key={index} style={{ marginBottom: "10px", padding: "10px", border: "1px solid #ccc", borderRadius: "5px" }}>
-                        <span>Route {index + 1}</span>
-                        <ul style={{ listStyleType: "none", padding: 0 }}>
+                    <li key={index} style={{ marginBottom: "10px", padding: "10px", border: "1px solid #ccc", borderRadius: "5px", backgroundColor: "#f9f9f9" }}>
+                        <span style={{ fontWeight: "bold" }}>Route {index + 1}</span>
+                        <ul style={{ listStyleType: "none", padding: "10px", backgroundColor: "#fff", borderRadius: "5px", marginTop: "10px" }}>
                             {route.map((point, idx) => (
-                                <li key={idx}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
+                                <li key={idx} style={{ marginBottom: "5px" }}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
                             ))}
                         </ul>
-                        <button onClick={() => handleRemoveRoute(index)} style={{ backgroundColor: "red", color: "white", border: "none", borderRadius: "5px", padding: "5px 10px", cursor: "pointer" }}>Remove Route</button>
+                        <button onClick={() => handleRemoveRoute(index)} style={{ backgroundColor: "red", color: "white", border: "none", borderRadius: "5px", padding: "5px 10px", cursor: "pointer", marginTop: "10px" }}>Remove Route</button>
                     </li>
                 ))}
             </ul>

@@ -1,42 +1,25 @@
 'use client'
 
-import { useState } from 'react';
-
-const zooTickets = [
-    {
-        id: 1,
-        title: "Einzelperson - Jugendlich 03. November 2024",
-        details: {
-            validity: "03.10.2024",
-            type: "Standard",
-        },
-    },
-    {
-        id: 2,
-        title: "Einzelperson - Erwachsener 10. December 2024",
-        details: {
-            validity: "10.12.2024",
-            type: "Premium",
-        },
-    },
-];
-
-const oevTickets = [
-    {
-        id: 1,
-        title: "ZVV 24h-Ticket 05. Dezember 2024",
-        details: {
-            validity: "05.12.2024",
-            type: "24h-Ticket",
-            class: "2. Klasse",
-        },
-    },
-];
-
-
+import {useEffect, useState} from 'react';
 
 export default function Page() {
     const [visibleSection, setVisibleSection] = useState(null);
+    const [zooTickets, setZooTickets] = useState([]);
+    const [oevTickets, setOevTickets] = useState([]);
+
+    useEffect(() => {
+        // Fetch Zoo Tickets
+        fetch('/api/tickets')
+            .then(response => response.json())
+            .then(data => setZooTickets(data))
+            .catch(error => console.error('Error fetching zoo tickets:', error));
+
+        // Fetch ÖV Tickets
+        fetch('/api/oevTickets')
+            .then(response => response.json())
+            .then(data => setOevTickets(data))
+            .catch(error => console.error('Error fetching ÖV tickets:', error));
+    }, []);
 
     const handleButtonClick = (section) => {
         setVisibleSection(section);
@@ -45,6 +28,8 @@ export default function Page() {
     return (
         <div id="container">
             {/* Top Button */}
+            <br/>
+            <br/>
             <div id="top">
                 {visibleSection === 'zooTickets' && (
                     <button onClick={() => handleButtonClick(null)}>Zoo Tickets</button>
