@@ -2,94 +2,52 @@
 import React, {useState} from "react";
 import Image from "next/image";
 import mapImg from "../../img/map.png";
+import styles from './page.module.css';
 
 const MapView = ({points, handlePointClick, selectedPoint, selectedPoints}) => (
-    <div style={{position: "relative", width: "80%", height: "auto", margin: "0 auto"}}>
-        <Image src={mapImg} alt="Zoo Map" layout="responsive" style={{width: "100%", height: "auto"}}/>
+    <div className={styles.mapContainer}>
+        <Image src={mapImg} alt="Zoo Map" layout="responsive" className={styles.mapImage}/>
         {points.map((point) => {
             const isSelected = selectedPoints.findIndex(p => p.id === point.id) !== -1;
             return (
                 <div
                     key={point.id}
                     onClick={() => handlePointClick(point)}
-                    style={{
-                        position: "absolute",
-                        top: `${point.y}px`,
-                        left: `${point.x}px`,
-                        width: "20px",
-                        height: "20px",
-                        backgroundColor: isSelected ? "blue" : "red",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "white",
-                        fontSize: "12px",
-                    }}
+                    className={`${styles.mapPoint} ${isSelected ? styles.selected : ''}`}
                 >
                     {isSelected && selectedPoints.findIndex(p => p.id === point.id) + 1}
                 </div>
             );
         })}
         {selectedPoint && (
-            <div style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)",
-                backgroundColor: "white",
-                padding: "10px",
-                borderRadius: "5px"
-            }}>
+            <div className={styles.selectedPointInfo}>
                 <h3>{selectedPoint.name}</h3>
-                <p style={{color: "black"}}>Coordinates: ({selectedPoint.x}, {selectedPoint.y})</p>
+                <p>Coordinates: ({selectedPoint.x}, {selectedPoint.y})</p>
             </div>
         )}
     </div>
 );
 
 const SavedRoutes = ({savedRoutes, handleRemoveRoute, handleSelectRoute}) => (
-    <div style={{textAlign: "center", marginTop: "20px", width: "50%", margin: "0 auto",}}>
+    <div className={styles.savedRoutesContainer}>
         <h2>Saved Routes</h2>
         {savedRoutes.length === 0 ? (
             <p>No saved routes available.</p>
         ) : (
-            <ul style={{listStyleType: "none", padding: 0}}>
+            <ul className={styles.savedRoutesList}>
                 {savedRoutes.map((route, index) => (
-                    <li key={index} style={{
-                        marginBottom: "10px",
-                        padding: "10px",
-                        border: "1px solid #ccc",
-                        borderRadius: "5px",
-                        backgroundColor: "#f9f9f9",
-                        cursor: "pointer"
-                    }} onClick={() => handleSelectRoute(index)}>
-                        <span style={{fontWeight: "bold"}}>Route {index + 1}</span>
-                        <ul style={{
-                            listStyleType: "none",
-                            padding: "10px",
-                            backgroundColor: "#fff",
-                            borderRadius: "5px",
-                            marginTop: "10px"
-                        }}>
+                    <li key={index} className={styles.savedRouteItem} onClick={() => handleSelectRoute(index)}>
+                        <span className={styles.routeTitle}>Route {index + 1}</span>
+                        <ul className={styles.routePointsList}>
                             {route.map((point, idx) => (
                                 <li key={idx}
-                                    style={{marginBottom: "5px"}}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
+                                    className={styles.routePoint}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
                             ))}
                         </ul>
                         <button onClick={(e) => {
                             e.stopPropagation();
                             handleRemoveRoute(index);
-                        }} style={{
-                            backgroundColor: "red",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "5px",
-                            padding: "5px 10px",
-                            cursor: "pointer",
-                            marginTop: "10px"
-                        }}>Remove Route
+                        }} className={styles.removeRouteButton}>Remove Route
                         </button>
                     </li>
                 ))}
@@ -151,26 +109,11 @@ export default function Page() {
             ) : (
                 <SavedRoutes savedRoutes={savedRoutes} handleRemoveRoute={handleRemoveRoute}
                              handleSelectRoute={handleSelectRoute}/>)}
-            <div style={{
-                position: "fixed",
-                bottom: 0,
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                backgroundColor: "#f0f0f0",
-                padding: "10px"
-            }}>
-                <button onClick={() => setView("map")} style={{marginRight: "10px"}}>Map</button>
-                <button onClick={() => setView("routes")} style={{marginRight: "10px"}}>Saved Routes</button>
+            <div className={styles.bottomBar}>
+                <button onClick={() => setView("map")} className={styles.bottomBarButton}>Map</button>
+                <button onClick={() => setView("routes")} className={styles.bottomBarButton}>Saved Routes</button>
                 {view === "map" && selectedPoints.length > 0 && (
-                    <button onClick={handleSaveRoute} style={{
-                        backgroundColor: "green",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        padding: "5px 10px",
-                        cursor: "pointer"
-                    }}>Save Route</button>
+                    <button onClick={handleSaveRoute} className={styles.saveRouteButton}>Save Route</button>
                 )}
             </div>
         </div>
