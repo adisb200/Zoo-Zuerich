@@ -1,11 +1,11 @@
 'use client'
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Image from "next/image";
 import mapImg from "../../img/map.png";
 
-const MapView = ({ points, handlePointClick, selectedPoint, selectedPoints }) => (
-    <div style={{ position: "relative", width: "80%", height: "auto", margin: "0 auto" }}>
-        <Image src={mapImg} alt="Zoo Map" layout="responsive" style={{ width: "100%", height: "auto" }} />
+const MapView = ({points, handlePointClick, selectedPoint, selectedPoints}) => (
+    <div style={{position: "relative", width: "80%", height: "auto", margin: "0 auto"}}>
+        <Image src={mapImg} alt="Zoo Map" layout="responsive" style={{width: "100%", height: "auto"}}/>
         {points.map((point) => {
             const isSelected = selectedPoints.findIndex(p => p.id === point.id) !== -1;
             return (
@@ -43,35 +43,60 @@ const MapView = ({ points, handlePointClick, selectedPoint, selectedPoints }) =>
                 borderRadius: "5px"
             }}>
                 <h3>{selectedPoint.name}</h3>
-                <p style={{ color: "black" }}>Coordinates: ({selectedPoint.x}, {selectedPoint.y})</p>
+                <p style={{color: "black"}}>Coordinates: ({selectedPoint.x}, {selectedPoint.y})</p>
             </div>
         )}
     </div>
 );
 
-const SavedRoutes = ({ savedRoutes, handleRemoveRoute }) => (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
+const SavedRoutes = ({savedRoutes, handleRemoveRoute, handleSelectRoute}) => (
+    <div style={{textAlign: "center", marginTop: "20px", width: "50%", margin: "0 auto",}}>
         <h2>Saved Routes</h2>
         {savedRoutes.length === 0 ? (
             <p>No saved routes available.</p>
         ) : (
-            <ul style={{ listStyleType: "none", padding: 0 }}>
+            <ul style={{listStyleType: "none", padding: 0}}>
                 {savedRoutes.map((route, index) => (
-                    <li key={index} style={{ marginBottom: "10px", padding: "10px", border: "1px solid #ccc", borderRadius: "5px", backgroundColor: "#f9f9f9" }}>
-                        <span style={{ fontWeight: "bold" }}>Route {index + 1}</span>
-                        <ul style={{ listStyleType: "none", padding: "10px", backgroundColor: "#fff", borderRadius: "5px", marginTop: "10px" }}>
+                    <li key={index} style={{
+                        marginBottom: "10px",
+                        padding: "10px",
+                        border: "1px solid #ccc",
+                        borderRadius: "5px",
+                        backgroundColor: "#f9f9f9",
+                        cursor: "pointer"
+                    }} onClick={() => handleSelectRoute(index)}>
+                        <span style={{fontWeight: "bold"}}>Route {index + 1}</span>
+                        <ul style={{
+                            listStyleType: "none",
+                            padding: "10px",
+                            backgroundColor: "#fff",
+                            borderRadius: "5px",
+                            marginTop: "10px"
+                        }}>
                             {route.map((point, idx) => (
-                                <li key={idx} style={{ marginBottom: "5px" }}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
+                                <li key={idx}
+                                    style={{marginBottom: "5px"}}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
                             ))}
                         </ul>
-                        <button onClick={() => handleRemoveRoute(index)} style={{ backgroundColor: "red", color: "white", border: "none", borderRadius: "5px", padding: "5px 10px", cursor: "pointer", marginTop: "10px" }}>Remove Route</button>
+                        <button onClick={(e) => {
+                            e.stopPropagation();
+                            handleRemoveRoute(index);
+                        }} style={{
+                            backgroundColor: "red",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            padding: "5px 10px",
+                            cursor: "pointer",
+                            marginTop: "10px"
+                        }}>Remove Route
+                        </button>
                     </li>
                 ))}
             </ul>
         )}
     </div>
 );
-
 export default function Page() {
     const [view, setView] = useState("map");
     const [selectedPoint, setSelectedPoint] = useState(null);
@@ -90,7 +115,9 @@ export default function Page() {
 
     const handleSaveRoute = () => {
         setSavedRoutes([...savedRoutes, selectedPoints]);
+        console.log(savedRoutes)
         setSelectedPoints([]);
+        console.log(savedRoutes)
     };
 
     const handleRemoveRoute = (index) => {
@@ -98,28 +125,52 @@ export default function Page() {
         setSavedRoutes(newRoutes);
     };
 
+    const handleSelectRoute = (index) => {
+        setSelectedPoints(savedRoutes[index]);
+        setView("map");
+    };
+
     const points = [
-        { id: 1, name: "Eingang", x: 200, y: 350 },
-        { id: 2, name: "Löwen", x: 500, y: 175 },
-        { id: 4, name: "Elefanten", x: 675, y: 250 },
-        { id: 5, name: "Masoala Halle / Restaurant", x: 250, y: 710 },
-        { id: 6, name: "Pinguine", x: 360, y: 360 },
-        { id: 7, name: "Nashorn", x: 160, y: 100 },
-        { id: 8, name: "Streichelzoo", x: 550, y: 600 },
+        {id: 1, name: "Eingang", x: 200, y: 350},
+        {id: 2, name: "Löwen", x: 500, y: 175},
+        {id: 4, name: "Elefanten", x: 675, y: 250},
+        {id: 5, name: "Masoala Halle / Restaurant", x: 250, y: 710},
+        {id: 6, name: "Pinguine", x: 360, y: 360},
+        {id: 7, name: "Nashorn", x: 160, y: 100},
+        {id: 8, name: "Streichelzoo", x: 550, y: 600},
     ];
 
     return (
         <div>
+            <br/>
+            <br/>
+            <br/>
             {view === "map" ? (
-                <MapView points={points} handlePointClick={handlePointClick} selectedPoint={selectedPoint} selectedPoints={selectedPoints} />
+                <MapView points={points} handlePointClick={handlePointClick} selectedPoint={selectedPoint}
+                         selectedPoints={selectedPoints}/>
             ) : (
-                <SavedRoutes savedRoutes={savedRoutes} handleRemoveRoute={handleRemoveRoute} />
-            )}
-            <div style={{ position: "fixed", bottom: 0, width: "100%", display: "flex", justifyContent: "center", backgroundColor: "#f0f0f0", padding: "10px" }}>
-                <button onClick={() => setView("map")} style={{ marginRight: "10px" }}>Map</button>
-                <button onClick={() => setView("routes")} style={{ marginRight: "10px" }}>Saved Routes</button>
+                <SavedRoutes savedRoutes={savedRoutes} handleRemoveRoute={handleRemoveRoute}
+                             handleSelectRoute={handleSelectRoute}/>)}
+            <div style={{
+                position: "fixed",
+                bottom: 0,
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                backgroundColor: "#f0f0f0",
+                padding: "10px"
+            }}>
+                <button onClick={() => setView("map")} style={{marginRight: "10px"}}>Map</button>
+                <button onClick={() => setView("routes")} style={{marginRight: "10px"}}>Saved Routes</button>
                 {view === "map" && selectedPoints.length > 0 && (
-                    <button onClick={handleSaveRoute} style={{ backgroundColor: "green", color: "white", border: "none", borderRadius: "5px", padding: "5px 10px", cursor: "pointer" }}>Save Route</button>
+                    <button onClick={handleSaveRoute} style={{
+                        backgroundColor: "green",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                        cursor: "pointer"
+                    }}>Save Route</button>
                 )}
             </div>
         </div>

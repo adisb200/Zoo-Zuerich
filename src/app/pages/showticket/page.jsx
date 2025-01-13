@@ -9,7 +9,7 @@ export default function Page() {
 
 async function fetchTickets() {
     try {
-        const response = await fetch('http://localhost:3000/api/ticket');
+        const response = await fetch('http://localhost:3000/api/data');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
