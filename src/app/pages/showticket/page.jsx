@@ -7,19 +7,24 @@ export default function Page() {
     const [zooTickets, setZooTickets] = useState([]);
     const [oevTickets, setOevTickets] = useState([]);
 
-    useEffect(() => {
-        // Fetch Zoo Tickets
-        fetch('/api/tickets')
-            .then(response => response.json())
-            .then(data => setZooTickets(data))
-            .catch(error => console.error('Error fetching zoo tickets:', error));
+async function fetchTickets() {
+    try {
+        const response = await fetch('http://localhost:3000/api/ticket');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setZooTickets(data.zooTickets);
+        setOevTickets(data.oevTickets);
+    } catch (error) {
+        console.error('Error fetching tickets:', error);
+    }
+}
 
-        // Fetch ÖV Tickets
-        fetch('/api/oevTickets')
-            .then(response => response.json())
-            .then(data => setOevTickets(data))
-            .catch(error => console.error('Error fetching ÖV tickets:', error));
-    }, []);
+useEffect(() => {
+    fetchTickets();
+}, []);
+
 
     const handleButtonClick = (section) => {
         setVisibleSection(section);
