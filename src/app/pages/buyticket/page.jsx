@@ -28,6 +28,15 @@ export default function Page() {
         });
     };
 
+    const submitTickets = async () => {
+
+        const response = await fetch('http://localhost:3000/api/data', {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        });
+
+    }
+
     const handlePeopleCountChange = (e) => {
         const newCount = parseInt(e.target.value, 10);
         const newPeople = [...formData.people];
@@ -85,7 +94,7 @@ export default function Page() {
             ovTicket: {selected: false, place: ""},
         });
         setStep(1);
-        calculateFinalPrice();
+        submitTickets();
     };
 
     function calculateFinalPrice() {
