@@ -1,0 +1,114 @@
+.mapContainer {
+    position: relative;
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.mapImage {
+    width: 100%;
+    height: auto;
+}
+
+.mapPoint {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+}
+
+.mapPoint.selected {
+    background-color: blue;
+}
+
+.mapPoint:not(.selected) {
+    background-color: red;
+}
+
+.selectedPointInfo {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
+}
+
+.savedRoutesContainer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.savedRoutesList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.savedRouteItem {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.savedRouteItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.routePointsList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.routePoint {
+    margin-bottom: 5px;
+}
+
+.removeRouteButton {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.bottomBar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+}
+
+.bottomBarButton {
+    margin-right: 10px;
+}
+
+.saveRouteButton {
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}

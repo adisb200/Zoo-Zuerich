@@ -9,7 +9,6 @@ import Link from "next/link";
 export default function Page() {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
-        personCount: "",
         people: [{name: "", ticketType: "free"}],
         date: "",
         special: "none",
@@ -28,24 +27,32 @@ export default function Page() {
         });
     };
 
-    const handlePeopleCountChange = (e) => {
-        const newCount = parseInt(e.target.value, 10);
-        const newPeople = [...formData.people];
+    const submitTickets = async () => {
 
-        if (newCount > formData.peopleCount) {
-            for (let i = formData.peopleCount; i < newCount; i++) {
-                newPeople.push({name: "", ticketType: "free"});
-            }
-        } else {
-            newPeople.length = newCount;
-        }
-
-        setFormData({
-            ...formData,
-            peopleCount: newCount,
-            people: newPeople,
+        await fetch('http://localhost:3000/api/data', {
+            method: 'POST',
+            body: JSON.stringify(formData)
         });
-    };
+
+    }
+
+const handlePeopleCountChange = (e) => {
+    const newCount = parseInt(e.target.value, 10);
+    const newPeople = [...formData.people];
+
+    if (newCount > formData.people.length) {
+        for (let i = formData.people.length; i < newCount; i++) {
+            newPeople.push({name: "", ticketType: "free"});
+        }
+    } else {
+        newPeople.length = newCount;
+    }
+
+    setFormData({
+        ...formData,
+        people: newPeople,
+    });
+};
 
     const handlePersonChange = (index, field, value) => {
         const newPeople = [...formData.people];
@@ -59,16 +66,14 @@ export default function Page() {
     const addPerson = () => {
         setFormData({
             ...formData,
-            peopleCount: formData.peopleCount + 1,
             people: [...formData.people, {name: "", ticketType: "free"}],
         });
     };
 
     const removePerson = () => {
-        if (formData.peopleCount > 1) {
+        if (formData.people.length > 1) {
             setFormData({
                 ...formData,
-                peopleCount: formData.peopleCount - 1,
                 people: formData.people.slice(0, -1),
             });
         }
@@ -76,7 +81,6 @@ export default function Page() {
 
     const resetForm = () => {
         setFormData({
-            personCount: "",
             people: [{name: "", ticketType: "free"}],
             name: "",
             date: "",
@@ -85,7 +89,7 @@ export default function Page() {
             ovTicket: {selected: false, place: ""},
         });
         setStep(1);
-        calculateFinalPrice();
+        submitTickets();
     };
 
     function calculateFinalPrice() {
@@ -120,9 +124,11 @@ export default function Page() {
                         type="number"
                         name="peopleCount"
                         id="peopleCount"
-                        value={formData.peopleCount}
+                        value={formData.people.length}
                         onChange={handlePeopleCountChange}
                         placeholder="Anzahl Personen"
+                        max={10}
+                        min={1}
                     />
                     <label htmlFor="name">Personen Erfassen</label>
                     {formData.people.map((person, index) => (
@@ -130,7 +136,7 @@ export default function Page() {
                             <input
                                 type="text"
                                 name="name"
-                                value={person.name}
+                                value={person.name || ""}
                                 onChange={(e) => handlePersonChange(index, "name", e.target.value)}
                                 placeholder="Vorname Nachname"
                             />
@@ -156,7 +162,7 @@ export default function Page() {
                         type="date"
                         name="date"
                         id="date"
-                        value={formData.date}
+                        value={formData.date || ""}
                         onChange={handleChange}
                     />
 
@@ -249,11 +255,16 @@ export default function Page() {
                                onChange={handleChange}/>
                         Von:
                         <label>
-                            <input type="text" name="ovTicket.place" value={formData.ovTicket.place}
-                                   onChange={(e) => setFormData({
-                                       ...formData,
-                                       ovTicket: {...formData.ovTicket, place: e.target.value}
-                                   })} placeholder="Ort"/>
+                            <input
+                                type="text"
+                                name="ovTicket.place"
+                                value={formData.ovTicket.place || ""}
+                                onChange={(e) => setFormData({
+                                    ...formData,
+                                    ovTicket: {...formData.ovTicket, place: e.target.value}
+                                })}
+                                placeholder="Ort"
+                            />
                         </label>
                         6 CHF.- pro Person
                     </div>
