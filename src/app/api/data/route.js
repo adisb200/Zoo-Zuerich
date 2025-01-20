@@ -44,28 +44,36 @@ export function GET() {
     });
 }
 
-export function POST(req) {
-    const formData = req.formData;
+export async function POST(req) {
+    const formData = await req.json();
 
     const tempOevTicket = {
         id: oevTickets.length + 1,
-        title: "ZVV 24h-Ticket" + formData.date,
+        title: "ZVV 24h-Ticket " + formData.date,
         details: {
             validity: formData.date, type: "24h-Ticket", class: "2. Klasse",
         }
     }
 
-
     const tempZooTicket = {
         id: zooTickets.length + 1,
-        title: "Einzelperson - Jugendlich 03. November 2024",
+        title: "Einzelperson - Jugendlich " + formData.date,
         details: {
-            validity: "03.10.2024", type: "Standard",
+            validity: formData.date, type: "Standard",
         },
     };
 
-    data.oevTickets.push(tempOevTicket);
-    data.zooTickets.push(tempZooTicket);
+    if (formData.ovTicket.selected) {
+        console.log("added data")
+        for (let i = 0; i < formData.people.length; i++) {
+            data.oevTickets.push(tempOevTicket);
+        }
+    }
+
+    for (let i = 0; i < formData.people.length; i++) {
+        console.log("added data")
+        data.zooTickets.push(tempZooTicket);
+    }
 
     return new Response(JSON.stringify(data), {
         headers: {'Content-Type': 'application/json'},
