@@ -21,8 +21,6 @@
     align-items: center;
     color: white;
     font-size: 12px;
-    border: 2px solid white;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
 .mapPoint.selected {
@@ -47,34 +45,36 @@
 .savedRoutesContainer {
     text-align: center;
     margin-top: 20px;
-    width: 50%;
-    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .savedRoutesList {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 .savedRouteItem {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    cursor: pointer;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.routeTitle {
-    font-weight: bold;
+.savedRouteItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .routePointsList {
     list-style-type: none;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 5px;
-    margin-top: 10px;
+    padding: 0;
 }
 
 .routePoint {
@@ -88,7 +88,6 @@
     border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
-    margin-top: 10px;
 }
 
 .bottomBar {

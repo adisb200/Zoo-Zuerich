@@ -1,19 +1,23 @@
 'use client'
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import mapImg from "../../img/map.png";
 import styles from './page.module.css';
 
-const MapView = ({points, handlePointClick, selectedPoint, selectedPoints}) => (
+const MapView = ({ points, handlePointClick, selectedPoint, selectedPoints }) => (
     <div className={styles.mapContainer}>
-        <Image src={mapImg} alt="Zoo Map" layout="responsive" className={styles.mapImage}/>
+        <Image src={mapImg} alt="Zoo Map" layout="responsive" className={styles.mapImage} />
         {points.map((point) => {
             const isSelected = selectedPoints.findIndex(p => p.id === point.id) !== -1;
             return (
                 <div
                     key={point.id}
                     onClick={() => handlePointClick(point)}
-                    className={`${styles.mapPoint} ${isSelected ? styles.selected : ''}`}
+                    className={`${styles.mapPoint} ${isSelected ? styles.selected : ""}`}
+                    style={{
+                        top: `${point.y}px`,
+                        left: `${point.x}px`,
+                    }}
                 >
                     {isSelected && selectedPoints.findIndex(p => p.id === point.id) + 1}
                 </div>
@@ -28,7 +32,7 @@ const MapView = ({points, handlePointClick, selectedPoint, selectedPoints}) => (
     </div>
 );
 
-const SavedRoutes = ({savedRoutes, handleRemoveRoute, handleSelectRoute}) => (
+const SavedRoutes = ({ savedRoutes, handleRemoveRoute }) => (
     <div className={styles.savedRoutesContainer}>
         <h2>Saved Routes</h2>
         {savedRoutes.length === 0 ? (
@@ -36,25 +40,21 @@ const SavedRoutes = ({savedRoutes, handleRemoveRoute, handleSelectRoute}) => (
         ) : (
             <ul className={styles.savedRoutesList}>
                 {savedRoutes.map((route, index) => (
-                    <li key={index} className={styles.savedRouteItem} onClick={() => handleSelectRoute(index)}>
-                        <span className={styles.routeTitle}>Route {index + 1}</span>
+                    <li key={index} className={styles.savedRouteItem}>
+                        <span>Route {index + 1}</span>
                         <ul className={styles.routePointsList}>
                             {route.map((point, idx) => (
-                                <li key={idx}
-                                    className={styles.routePoint}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
+                                <li key={idx} className={styles.routePoint}>{idx + 1}. {point.name} ({point.x}, {point.y})</li>
                             ))}
                         </ul>
-                        <button onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveRoute(index);
-                        }} className={styles.removeRouteButton}>Remove Route
-                        </button>
+                        <button onClick={() => handleRemoveRoute(index)} className={styles.removeRouteButton}>Remove Route</button>
                     </li>
                 ))}
             </ul>
         )}
     </div>
 );
+
 export default function Page() {
     const [view, setView] = useState("map");
     const [selectedPoint, setSelectedPoint] = useState(null);
@@ -73,9 +73,7 @@ export default function Page() {
 
     const handleSaveRoute = () => {
         setSavedRoutes([...savedRoutes, selectedPoints]);
-        console.log(savedRoutes)
         setSelectedPoints([]);
-        console.log(savedRoutes)
     };
 
     const handleRemoveRoute = (index) => {
@@ -83,19 +81,14 @@ export default function Page() {
         setSavedRoutes(newRoutes);
     };
 
-    const handleSelectRoute = (index) => {
-        setSelectedPoints(savedRoutes[index]);
-        setView("map");
-    };
-
     const points = [
-        {id: 1, name: "Eingang", x: 200, y: 350},
-        {id: 2, name: "Löwen", x: 500, y: 175},
-        {id: 4, name: "Elefanten", x: 675, y: 250},
-        {id: 5, name: "Masoala Halle / Restaurant", x: 250, y: 710},
-        {id: 6, name: "Pinguine", x: 360, y: 360},
-        {id: 7, name: "Nashorn", x: 160, y: 100},
-        {id: 8, name: "Streichelzoo", x: 550, y: 600},
+        { id: 1, name: "Eingang", x: 200, y: 350 },
+        { id: 2, name: "Löwen", x: 500, y: 175 },
+        { id: 4, name: "Elefanten", x: 675, y: 250 },
+        { id: 5, name: "Masoala Halle / Restaurant", x: 250, y: 710 },
+        { id: 6, name: "Pinguine", x: 360, y: 360 },
+        { id: 7, name: "Nashorn", x: 160, y: 100 },
+        { id: 8, name: "Streichelzoo", x: 550, y: 600 },
     ];
 
     return (
@@ -104,11 +97,10 @@ export default function Page() {
             <br/>
             <br/>
             {view === "map" ? (
-                <MapView points={points} handlePointClick={handlePointClick} selectedPoint={selectedPoint}
-                         selectedPoints={selectedPoints}/>
+                <MapView points={points} handlePointClick={handlePointClick} selectedPoint={selectedPoint} selectedPoints={selectedPoints} />
             ) : (
-                <SavedRoutes savedRoutes={savedRoutes} handleRemoveRoute={handleRemoveRoute}
-                             handleSelectRoute={handleSelectRoute}/>)}
+                <SavedRoutes savedRoutes={savedRoutes} handleRemoveRoute={handleRemoveRoute} />
+            )}
             <div className={styles.bottomBar}>
                 <button onClick={() => setView("map")} className={styles.bottomBarButton}>Map</button>
                 <button onClick={() => setView("routes")} className={styles.bottomBarButton}>Saved Routes</button>
