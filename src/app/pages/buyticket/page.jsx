@@ -36,23 +36,23 @@ export default function Page() {
 
     }
 
-const handlePeopleCountChange = (e) => {
-    const newCount = parseInt(e.target.value, 10);
-    const newPeople = [...formData.people];
+    const handlePeopleCountChange = (e) => {
+        const newCount = parseInt(e.target.value, 10);
+        const newPeople = [...formData.people];
 
-    if (newCount > formData.people.length) {
-        for (let i = formData.people.length; i < newCount; i++) {
-            newPeople.push({name: "", ticketType: "free"});
+        if (newCount > formData.people.length) {
+            for (let i = formData.people.length; i < newCount; i++) {
+                newPeople.push({name: "", ticketType: "free"});
+            }
+        } else {
+            newPeople.length = newCount;
         }
-    } else {
-        newPeople.length = newCount;
-    }
 
-    setFormData({
-        ...formData,
-        people: newPeople,
-    });
-};
+        setFormData({
+            ...formData,
+            people: newPeople,
+        });
+    };
 
     const handlePersonChange = (index, field, value) => {
         const newPeople = [...formData.people];
@@ -251,8 +251,15 @@ const handlePeopleCountChange = (e) => {
 
                     <h3>ÖV Tages Ticket</h3>
                     <div style={{display: "flex", alignItems: "center"}}>
-                        <input type="checkbox" name="ovTicket" checked={formData.ovTicket.selected}
-                               onChange={handleChange}/>
+                        <input
+                            type="checkbox"
+                            name="ovTicket"
+                            checked={formData.ovTicket.selected || false}
+                            onChange={(e) => setFormData({
+                                ...formData,
+                                ovTicket: {...formData.ovTicket, selected: e.target.checked}
+                            })}
+                        />
                         Von:
                         <label>
                             <input
